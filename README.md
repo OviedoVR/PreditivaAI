@@ -12,4 +12,5 @@ Repositório Destinado aos materiais desenvolvidos no Curso '**Gerando valor com
 1. Estatística descritiva
 2. Dataviz: Pizza, linhas, barras, Pareto, Boxplot
 3. Cases: produtos bancários e IDHM
-4. Estudo de Caso: Campanhas de Marketing 
+4. Estudo de Caso: Campanhas de Marketing
+5. Probabilidade: teorias Clássica, Frequentista e Axiomática
