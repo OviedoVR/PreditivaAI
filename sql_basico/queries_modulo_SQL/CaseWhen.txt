@@ -1,0 +1,44 @@
+/*
+1. Considere que a tabela tb_vendas representa as vendas realizadas pela empresa que trabalha. Você percebeu que existe um erro nos registros. No inicio de 2020 o gerente Jose Moraes foi substituído pelo Joao Maria. Crie uma consulta corrigindo os dados da tabela
+*/
+SELECT 
+	"Data", "Estado", "Região",
+	"Vendedor", "Departamento", 
+	"Forma de Pagamento", "Valor",
+	CASE
+ 	  WHEN "Data" > '2020-01-01' AND "Gerente" = 'Jose Moraes' THEN 'Joao Maria'
+	END AS "Gerente"
+FROM tb_vendas
+order by 8 asc
+
+
+/*
+2. O Departamento "Esportes e Lazer" mudou de nome para "Bem-estar". Crie uma consulta da tabela tb_vendas substituindo "Esporte e lazer" por "Bem-estar"
+*/
+SELECT 
+	"Data", 
+	"Estado", 
+	"Região",
+	"Vendedor",
+	"Forma de Pagamento", 
+	"Valor",
+	CASE
+ 	  WHEN "Departamento" = 'Esporte e Lazer' THEN 'Bem-estar'
+	  WHEN "Departamento" != 'Esporte e Lazer' THEN "Departamento"
+	  ELSE 'Outro departamento'	
+	END AS "Departamento"
+FROM tb_vendas
+
+
+/*
+3. Crie uma consulta da tabela tb_vendas com uma coluna que informe se o valor da venda foi maior ou menor que 1000. 
+*/
+SELECT 
+	"Data", "Estado", "Região",
+	"Vendedor", "Departamento", 
+	"Forma de Pagamento", "Valor",
+	CASE
+ 	  WHEN "Valor" > 1000 THEN 'Maior que 1000'
+	  ELSE 'Até 1000'
+	END AS "Volume da venda"
+FROM tb_vendas

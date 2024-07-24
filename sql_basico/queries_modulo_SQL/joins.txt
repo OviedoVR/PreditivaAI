@@ -1,0 +1,94 @@
+/*
+1. Considerando o schema db_star_sales e utilizando as tabelas 'sales' e 'time', crie uma consulta SQL que exiba  o ID do produto, valor da transação, o ano, o mês e o dia da transação
+*/
+SELECT 
+	s.product_id,
+	s.transaction_amount,
+	t.time_year,
+	t.time_month,
+	t.time_day
+FROM 
+	db_star_sales.sales AS s
+JOIN  db_star_sales.time AS t
+  ON  s.time_id = t.time_id
+order by 3 DESC, 4 desc, 5 DESC
+	
+/*
+2. Considerando o schema db_star_sales e utilizando as tabelas 'sales' e 'time', crie uma consulta SQL que exiba  o ID do produto, valor da transação, o ano, o mês e o dia da transação para o ano de 2015
+*/
+SELECT 
+	s.product_id,
+	s.transaction_amount,
+	t.time_year,
+	t.time_month,
+	t.time_day
+FROM 
+	db_star_sales.sales AS s
+JOIN  db_star_sales.time AS t
+  ON  s.time_id = t.time_id
+where t.time_year = 2015
+order by 3 DESC, 4 desc, 5 desc
+
+
+/*
+3. Considerando o schema db_star_sales crie uma consulta que traga o nome dos produtos e região vendida, bem como o id e o valor da transação
+*/
+SELECT
+	p.product_name,
+	r.region_name,
+	s.sales_id,
+	s.transaction_amount
+FROM
+	db_star_sales.sales s
+JOIN	db_star_sales.products p
+  ON  s.product_id = p.product_id
+JOIN  db_star_sales.regions r
+  ON  s.region_id = r.region_id
+order by 4 DESC
+
+/*
+4. Liste as vendas na região de Portugal no ano de 2016, considerando o schema db_star_sales
+*/
+SELECT
+	 r.region_name as regiao,
+	 s.sales_id as vendas,
+	 t.time_year as ano
+FROM
+       db_star_sales.sales s
+JOIN db_star_sales.regions r
+  ON s.region_id = r.region_id
+JOIN db_star_sales.time t
+  ON s.time_id = t.time_id AND t.time_year = 2016 and r.region_name = 'Portugal'
+
+/*
+5. Liste as vendas no Brasil a partir de 2015, considerando o schema db_star_sales
+*/
+SELECT
+	 r.region_name as regiao,
+	 s.sales_id as vendas,
+	 t.time_year as ano,
+	 t.time_month as mes,
+	 t.time_day as dia
+FROM
+       db_star_sales.sales s
+JOIN db_star_sales.regions r
+  ON s.region_id = r.region_id
+JOIN db_star_sales.time t
+  ON s.time_id = t.time_id AND t.time_year >= 2015 and r.region_name in ('Brazil', 'Brasil')
+
+/*
+6. Liste as vendas no Brasil no ano de 2016 e ordene a consulta da maior para a menor transação
+*/
+SELECT
+	 r.region_name as regiao,
+	 s.sales_id as vendas,
+	 t.time_year as ano
+FROM
+       db_star_sales.sales s
+JOIN db_star_sales.regions r
+  ON s.region_id = r.region_id
+JOIN db_star_sales.time t
+  ON s.time_id = t.time_id 
+WHERE 
+	t.time_year = 2016 AND r.region_name = 'Brazil'
+ORDER BY 2 DESC

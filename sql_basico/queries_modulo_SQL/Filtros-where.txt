@@ -1,0 +1,35 @@
+/*
+1. Utilizando a tabela tb_vendas, liste todas as vendas com pagamento pix.
+*/
+SELECT 
+	*
+FROM
+	tb_vendas
+WHERE
+ 	tb_vendas."Forma de Pagamento" = 'Pix';
+
+
+/*
+2. Utilizando a tabela tb_vendas, liste todas as vendas com valor acima de 1000.
+*/
+SELECT 
+	*
+FROM
+	tb_vendas
+WHERE
+	tb_vendas."Valor" >= 1000
+ORDER BY
+	tb_vendas."Valor" DESC;
+
+
+/*
+3. Utilizando a tabela tb_vendas, liste todas as vendas de 2017.
+*/
+SELECT 
+	*
+FROM
+	tb_vendas
+WHERE
+	tb_vendas."Data" >= '2017-01-01 AND tb_vendas."Data < '2018-01-01';
+-- ou       
+   --tb_vendas."Data" BETWEEN '2017-01-01' AND '2017-12-31'

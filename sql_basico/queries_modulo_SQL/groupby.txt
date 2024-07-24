@@ -1,0 +1,36 @@
+/*
+1. Qual o total de vendas por ano, considerando a tabela tb_vendas?
+*/
+SELECT
+	extract(year from "Data") as "Ano",
+	SUM("Valor") AS "Vendas"
+FROM
+	tb_vendas
+group by
+	extract(year from "Data")
+order by 1 DESC
+
+/*
+2. Qual a quantidade de vendas por ano, considerando a tabela tb_vendas?
+*/
+SELECT 
+	EXTRACT(YEAR from "Data") AS "Ano",
+	COUNT("Valor") AS "Quantidade de Vendas"
+FROM
+	tb_vendas
+GROUP BY
+	EXTRACT(YEAR from "Data")
+ORDER BY 1 DESC
+
+/*
+3. Qual o total de vendas por vendedor no ano de 2018, considerando a tabela tb_vendas?
+*/
+SELECT
+	"Vendedor",
+	SUM("Valor") AS "Total de Vendas"
+FROM 
+	tb_vendas
+WHERE EXTRACT(YEAR FROM "Data") = '2018'
+GROUP BY
+	"Vendedor", EXTRACT(YEAR FROM "Data")
+ORDER BY 2 DESC

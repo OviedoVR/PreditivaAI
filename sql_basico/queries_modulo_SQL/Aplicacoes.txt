@@ -1,0 +1,78 @@
+/*
+Aplicação 1: Analisando comportamento das vendas por dia da semana - Compreender os 
+padrões de vendas durante dias específicos da semana auxilia no planejamento 
+de promoções. Formule uma consulta que obtenha o número total de vendas realizadas às 
+segundas-feiras em todos os anos disponíveis utilizando as tabelas 'sales' e 
+'time' do schema db_star_sales.
+*/
+SELECT
+    SUM(s.transaction_amount) AS total_vendas    
+FROM
+    db_star_sales.sales s
+JOIN
+    db_star_sales.time t
+    ON s.time_id = t.time_id
+WHERE 
+    t.time_day_of_week = 2
+    
+/* 
+Aplicação 2: Produtos com maiores volumes de vendas - Utilizando as tabelas 
+'sales' e 'products' do schema db_star_sales, construa uma consulta SQL que 
+identifique os 5 produtos com os maiores valores de transação. Mostre os 
+nomes dos produtos e seus respectivos valores totais de transação.
+*/
+SELECT 
+    p.product_name as product,
+    SUM(s.transaction_amount) as sales_volume
+FROM
+    db_star_sales.sales s
+JOIN
+    db_star_sales.products p
+    ON s.product_id = p.product_id
+GROUP BY 
+    p.product_name
+ORDER BY 2 DESC
+LIMIT 5;
+
+/*
+Aplicação 3: Total de vendas por ano - Utilizando o schema db_star_sales, 
+verifique a quantidade de vendas realizadas por ano.
+*/
+SELECT
+    t.time_year AS ano,
+    COUNT(s.sales_id) AS total_vendas    
+FROM
+    db_star_sales.sales s
+JOIN
+    db_star_sales.time t
+    ON s.time_id = t.time_id
+GROUP BY
+    t.time_year
+ORDER BY
+    1 DESC;
+    
+/* 
+Aplicação 4: Regiões com maiores vendas em um dia da semana - Utilizando o 
+schema db_star_sales, desenvolva uma consulta SQL que recupere as 3 regiões 
+com os maiores valores totais de transação às terças feiras. Apresente os 
+nomes das regiões e seus respectivos valores totais de vendas.
+*/
+SELECT 
+    r.region_name as regiao,
+    SUM(transaction_amount) as total_transacoes
+FROM
+    db_star_sales.sales s
+JOIN
+    db_star_sales.regions r
+    ON s.region_id = r.region_id
+JOIN
+    db_star_sales.time t
+    ON s.time_id = t.time_id
+WHERE 
+    t.time_day_of_week = 3
+GROUP BY 
+    r.region_name,
+    t.time_day_of_week
+ORDER BY
+    2 DESC
+LIMIT 3;
