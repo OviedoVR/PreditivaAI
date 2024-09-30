@@ -1,0 +1,75 @@
+-- EXERCÍCIOS: SUBQUERY/ CTE
+
+/*
+1. Considerando o schema db_star_sales, liste as vendas realizadas em 2018 e
+o quanto elas representam (em porcentagem) no total de vendas do ano?
+*/
+
+--Total de vendas do ano (2018)
+WITH total_vendas_2018 AS (
+	SELECT
+		SUM(s.transaction_amount) AS total
+	FROM
+		db_star_sales.sales s
+	JOIN
+		db_star_sales."time" t
+	  	ON
+	  	s.time_id = t.time_id
+	WHERE
+		t.time_year = 2018
+)
+--Vendas do 2018 e percentual do total
+SELECT
+	sales_id,
+	transaction_amount,
+	ROUND( CAST(transaction_amount AS DECIMAL) / CAST((SELECT total FROM  total_vendas_2018) AS DECIMAL)*100, 2) AS percent
+FROM
+	db_star_sales.sales s
+JOIN
+	db_star_sales."time" t
+  	ON
+  	s.time_id = t.time_id
+WHERE
+	t.time_year = 2018
+ORDER BY 3 DESC;
+
+
+/*
+2. Considerando o schema db_star_sales, liste as vendas realizadas em 2016 e
+o quanto elas representam (em porcentagem) no total de vendas da região para este ano?
+*/
+--Vendas por região em 2016
+WITH total_por_regiao AS (
+	SELECT
+		s.region_id,
+		sum(s.transaction_amount) AS total_regiao
+	FROM
+		db_star_sales.sales s
+		INNER JOIN db_star_sales."time" t
+			ON s.time_id = t.time_id
+	WHERE
+		t.time_year = 2016
+	GROUP BY
+		s.region_id
+	ORDER BY
+		s.region_id
+)
+--query principal
+SELECT
+	s.sales_id,
+	s.time_id,
+	s.product_id,
+	s.region_id,
+	s.transaction_amount,
+	tr.total_regiao,
+	100*CAST(s.transaction_amount AS NUMERIC)/tr.total_regiao AS perc_total_regiao
+FROM
+	db_star_sales.sales s
+	INNER JOIN db_star_sales."time" t
+		ON s.time_id = t.time_id
+	LEFT JOIN total_por_regiao tr
+		ON s.region_id = tr.region_id
+WHERE
+	t.time_year = 2016
+ORDER BY
+	s.region_id
