@@ -3,8 +3,52 @@
 /*
 1. Verifique a variação mensal do valor das transações mês a mês para o schema de db_star_sales
 */
-
+/*
+1. Verifique a variação mensal do valor das transações mês a mês para o schema de db_star_sales
+*/
+WITH agg_mes AS (
+	SELECT 
+		t.time_year AS ano,
+		t.time_month AS mes,
+		sum(coalesce(s.transaction_amount, 0)) AS total_mes
+	FROM 
+		db_star_sales."time" AS t 
+		LEFT JOIN db_star_sales.sales s 
+			ON t.time_id = s.time_id
+	GROUP BY
+		1, 2
+	ORDER BY
+		ano, mes
+)
+SELECT
+	ano,
+	mes,
+	total_mes,
+	LAG(total_mes) OVER (PARTITION BY mes ORDER BY ano, mes) AS total_mes_anterior,
+	total_mes - (LAG(total_mes) OVER (PARTITION BY mes ORDER BY ano, mes)) AS variacao	
+FROM agg_mes
 
 /*
 2. Liste a primeira venda de cada região para cada ano considerando o schema db_star_sales
 */
+WITH rank_regiao_ano AS (
+	SELECT 
+		s.*,
+		t.time_year AS ano,
+		ROW_NUMBER() OVER(PARTITION BY s.region_id, t.time_year ORDER BY t.time_month, t.time_day, t.time_hour, t.time_minute) AS rank_regiao_ano
+	FROM 
+		db_star_sales.sales s
+		INNER JOIN db_star_sales."time" t 
+			ON s.time_id = t.time_id
+)	
+SELECT 
+	sales_id,
+	time_id,
+	ano, 
+	product_id,
+	region_id,
+	transaction_amount
+FROM 
+	rank_regiao_ano
+WHERE 
+	rank_regiao_ano = 1
